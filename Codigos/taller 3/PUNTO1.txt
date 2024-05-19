@@ -1,0 +1,101 @@
+
+
+
+t = linspace(-4, 4, 500); %Variable tiempo
+xt = 3*t.^3 + 2*t.^2; %Secuencia continua
+dx1 = 9*t.^2 + 4*t; %Primera derivada
+dx2 = 18*t + 4; %Segunda derivada
+n = -50:49; %Indice discreto
+T = 1/12.5; %Periodo de muestreo
+xn = 3*(n*T).^3 + 2*(n*T).^2; %Secuencia discreta
+x1 = D1(xn); %Primera diferencia
+x2 = D2(xn); %Segunda diferencia
+figure
+subplot(1,3,1)
+plot(t, xt, '-y', n*T, xn, '.'), set(gca, 'ytick',[])
+legend({'x(t)','x(n)'})
+subplot(1,3,2)
+x1(1)=[]; x1(end)=nan; %quitar primera y ultima muestra
+plot(t, dx1, '-y', n*T, x1/T, '.'), set(gca, 'ytick',[])
+legend({'dx(t)/dt','\partial\{x(n)\}/T'})
+subplot(1,3,3)
+x2([1,2])=[]; x2(end-1:end) = nan; %quitar primera y ultimas muestras
+plot(t, dx2, '-y', n*T, x2/(T*T), '.'), set(gca, 'ytick',[])
+legend({'dˆ2x(t)/dtˆ2','\partialˆ2\{x(n)\}/Tˆ2'})
+
+
+
+D1
+function [y] = D1 (x)
+%First difference 
+%Sintax:
+%  y = D1(x);
+%Inputs:
+%  x,    a vector with the input sequence
+%Outputs:
+%  y,    a vector with the first difference of the input
+
+
+%Edit here% %%%%%%%%%%%%%%%%%%
+k=0:99;
+r=0:200;
+h(k==1)=1;
+h(k~=1)=0;
+dimx=size(x);
+N1=dimx(end);
+dimh=size(h);
+N2=dimh(end);
+
+R=N1+N2-1;%tamaño de la convolucion 
+i=N1;%posiciones de x
+xc=zeros(1,R);
+
+xc(r<i)=x;
+c=xc-conv(x,h);
+y=zeros(1,101);
+y=c(r<101);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end
+
+
+D2
+
+function [y] = D2 (x)
+%Second difference 
+%Sintax:
+%  y = D2(x);
+%Inputs:
+%  x,    a vector with the input sequence
+%Outputs:
+%  y,    a vector with the second difference of the input
+
+%Edit here %%%%%%%%%%%%%%%%%%%
+k=0:99;
+r=0:200;
+h(k==1)=1;%impulso en 1
+h(k~=1)=0;
+
+g(k==2)=1;%impulso en 2
+g(k~=2)=0;
+
+
+dimx=size(x);
+N1=dimx(end);
+dimh=size(h);
+N2=dimh(end);
+R=N1+N2-1;%tamaño de la convolucion 
+i=N1-1;%posiciones de x
+xc=zeros(1,R);
+%Edit here% %%%%%%%%%%%%%%%%%%
+xc(r<=i)=x;
+c=xc-(2*conv(x,h))+(conv(x,g));
+y=zeros(1,102);
+y=c(r<102);
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end
